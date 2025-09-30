@@ -1,15 +1,17 @@
-import { defineConfig } from "eslint/config";
 import js from "@eslint/js";
 import tseslint from "@typescript-eslint/eslint-plugin";
 import tsparser from "@typescript-eslint/parser";
 import globals from "globals";
 
-export default defineConfig([
+export default [
+  // Global ignores
+  {
+    ignores: ["dist/**/*", "node_modules/**/*", "coverage/**/*", "*.d.ts"],
+  },
   // JavaScript files
   {
     files: ["**/*.js"],
-    plugins: { js },
-    extends: ["js/recommended"],
+    ...js.configs.recommended,
     languageOptions: {
       ecmaVersion: 2022,
       sourceType: "module",
@@ -79,9 +81,4 @@ export default defineConfig([
       },
     },
   },
-  // Ignore dist directory
-  {
-    files: ["dist/**/*"],
-    ignores: ["dist/**/*"],
-  },
-]);
+];

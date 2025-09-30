@@ -8,7 +8,9 @@
         "--rm",
         "--stop-timeout",
         "10",
-        "yourusername/stdio-context7-mcp:latest"
+        "-e",
+        "CONTEXT7_API_KEY=${CONTEXT7_API_KEY}",
+        "dolasoft/stdio-context7-mcp:latest"
       ]
     }
   }

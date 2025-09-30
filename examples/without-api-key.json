@@ -8,7 +8,7 @@
         "--rm",
         "--stop-timeout",
         "10",
-        "yourusername/stdio-context7-mcp:latest"
+        "dolasoft/stdio-context7-mcp:latest"
       ]
     }
   }

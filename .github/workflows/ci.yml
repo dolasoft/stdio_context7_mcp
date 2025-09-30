@@ -97,13 +97,91 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
       
-    - name: Create Release Notes
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Generate Changelog
       run: |
-        echo "## What's New" >> $GITHUB_STEP_SUMMARY
-        echo "- Updated MCP server with latest Context7 API integration" >> $GITHUB_STEP_SUMMARY
-        echo "- Added Docker multi-arch support" >> $GITHUB_STEP_SUMMARY
-        echo "- Improved error handling and logging" >> $GITHUB_STEP_SUMMARY
-        echo "" >> $GITHUB_STEP_SUMMARY
-        echo "## Docker Image" >> $GITHUB_STEP_SUMMARY
-        echo "Available as: \`${{ secrets.DOCKER_USERNAME }}/stdio-context7-mcp:latest\`" >> $GITHUB_STEP_SUMMARY
+        npm run changelog
+        if [ -f CHANGELOG.md ]; then
+          echo "## Changelog" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          head -50 CHANGELOG.md >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+        fi
+        
+    - name: Build Release Assets
+      run: |
+        npm run build
+        tar -czf stdio-context7-mcp-${GITHUB_REF_NAME}.tar.gz dist/ examples/ README.md package.json
+        zip -r stdio-context7-mcp-${GITHUB_REF_NAME}.zip dist/ examples/ README.md package.json
+        
+    - name: Create Release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref_name }}
+        release_name: Release ${{ github.ref_name }}
+        body: |
+          ## What's New in ${{ github.ref_name }}
+          
+          This release includes the latest updates to the STDIO Context7 MCP Server.
+          
+          ### Installation
+          
+          **Docker (Recommended):**
+          ```bash
+          docker pull ${{ secrets.DOCKER_USERNAME }}/stdio-context7-mcp:${{ github.ref_name }}
+          ```
+          
+          **From Source:**
+          1. Download the release assets below
+          2. Extract and run: `npm install && npm start`
+          
+          ### Docker Image
+          - **Latest:** `${{ secrets.DOCKER_USERNAME }}/stdio-context7-mcp:latest`
+          - **Tagged:** `${{ secrets.DOCKER_USERNAME }}/stdio-context7-mcp:${{ github.ref_name }}`
+          
+          ### Multi-Architecture Support
+          - linux/amd64
+          - linux/arm64  
+          - linux/arm/v7
+          
+          ### Files Changed
+          - Updated MCP server with latest Context7 API integration
+          - Added Docker multi-arch support
+          - Improved error handling and logging
+          - Enhanced TypeScript configuration
+          - Added comprehensive testing and CI/CD pipeline
+        draft: false
+        prerelease: ${{ contains(github.ref_name, 'beta') || contains(github.ref_name, 'alpha') || contains(github.ref_name, 'rc') }}
+        
+    - name: Upload Release Assets
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./stdio-context7-mcp-${{ github.ref_name }}.tar.gz
+        asset_name: stdio-context7-mcp-${{ github.ref_name }}.tar.gz
+        asset_content_type: application/gzip
+        
+    - name: Upload Release Assets (ZIP)
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./stdio-context7-mcp-${{ github.ref_name }}.zip
+        asset_name: stdio-context7-mcp-${{ github.ref_name }}.zip
+        asset_content_type: application/zip

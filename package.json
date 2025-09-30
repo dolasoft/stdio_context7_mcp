@@ -3,23 +3,11 @@
   "license": "MIT",
   "name": "stdio_context7_mcp",
   "version": "1.0.0",
+  "type": "module",
   "description": "STDIO Context7 MCP Server - Up-to-date code documentation for LLMs and AI code editors",
   "main": "dist/server.js",
   "bin": {
     "stdio-context7-mcp": "./dist/server.js"
-  },
-  "scripts": {
-    "build": "tsc && chmod +x dist/server.js",
-    "start": "node dist/server.js",
-    "dev": "npm run build && npm start",
-    "lint": "eslint src --ext .ts",
-    "lint:fix": "npm run lint -- --fix",
-    "test": "vitest",
-    "test:watch": "npm run test -- --watch",
-    "test:ui": "npm run test -- --ui",
-    "test:coverage": "npm run test -- --coverage",
-    "test:ci": "npm run test -- --run --coverage",
-    "ci": "npm run lint && npm run test:ci && npm run build"
   },
   "keywords": [
     "mcp",
@@ -36,17 +24,50 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/git": "^10.0.1",
     "@types/node": "^24.6.0",
     "@typescript-eslint/eslint-plugin": "^8.45.0",
     "@typescript-eslint/parser": "^8.45.0",
     "@vitest/coverage-v8": "^3.2.4",
     "@vitest/ui": "^3.2.4",
+    "conventional-changelog-cli": "^5.0.0",
+    "conventional-commits-parser": "^6.2.0",
     "eslint": "^9.36.0",
+    "globals": "^16.4.0",
     "supertest": "^7.1.4",
     "typescript": "^5.9.2",
     "vitest": "^3.2.4"
   },
   "engines": {
     "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dolasoft/stdio_context7_mcp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/dolasoft/stdio_context7_mcp/issues"
+  },
+  "homepage": "https://github.com/dolasoft/stdio_context7_mcp#readme",
+  "files": [
+    "dist/",
+    "examples/",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc && mkdir -p dist && chmod +x dist/server.js",
+    "start": "node dist/server.js",
+    "dev": "npm run build && npm start",
+    "lint": "eslint src --ext .ts",
+    "lint:fix": "npm run lint -- --fix",
+    "test": "vitest",
+    "test:watch": "npm run test -- --watch",
+    "test:ui": "npm run test -- --ui",
+    "test:coverage": "npm run test -- --coverage",
+    "test:ci": "npm run test -- --run --coverage",
+    "ci": "npm run lint && npm run test:ci && npm run build",
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
+    "release": "npm run changelog && git add CHANGELOG.md && git commit -m 'chore: update changelog'"
   }
 }
