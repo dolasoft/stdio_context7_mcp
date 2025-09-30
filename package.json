@@ -1,0 +1,37 @@
+{
+  "name": "stdio_context7_mcp",
+  "version": "1.0.0",
+  "description": "STDIO Context7 MCP Server - Up-to-date code documentation for LLMs and AI code editors",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "stdio-context7-mcp": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc && chmod +x dist/index.js",
+    "start": "node dist/index.js",
+    "dev": "npm run build && npm start",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "llm",
+    "ai",
+    "documentation",
+    "context7"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.18.2",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "^24.6.0",
+    "typescript": "^5.9.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
