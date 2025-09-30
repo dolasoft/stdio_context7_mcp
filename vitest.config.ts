@@ -25,6 +25,9 @@ export default defineConfig({
         '**/*.config.*',
       ],
     },
+    typecheck: {
+      tsconfig: './tsconfig.test.json',
+    },
   },
   resolve: {
     alias: {
