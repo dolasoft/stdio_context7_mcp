@@ -61,7 +61,7 @@ docker build -t stdio-context7-mcp .
 npm start
 
 # Start with API key
-node dist/index.js --api-key YOUR_API_KEY
+node dist/src/server.js --api-key YOUR_API_KEY
 
 # Development mode (auto-rebuild)
 npm run dev
@@ -97,7 +97,7 @@ This server is **optimized for Claude Code**. Add to your MCP configuration:
     "stdio-context7": {
       "command": "node",
       "args": [
-        "/path/to/STDIO_Context7_MCP/dist/server.js",
+        "/path/to/STDIO_Context7_MCP/dist/src/server.js",
         "--transport",
         "stdio"
       ]
@@ -149,7 +149,7 @@ Add to your `claude_desktop_config.json`:
     "stdio-context7": {
       "command": "node",
       "args": [
-        "/path/to/STDIO_Context7_MCP/dist/server.js",
+        "/path/to/STDIO_Context7_MCP/dist/src/server.js",
         "--api-key",
         "YOUR_API_KEY"
       ]
