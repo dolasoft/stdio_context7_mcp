@@ -36,7 +36,7 @@ async function main() {
     const libraryService = initializeServices(config);
     
     // Create and configure MCP server
-    const server = createMCPServer(libraryService);
+    const server = createMCPServer();
     setupRequestHandlers(server, libraryService);
 
     // Create transport and start server

@@ -2,7 +2,7 @@
  * Configuration management for the Context7 MCP Server
  */
 
-import { ServerConfig } from '../types/index.js';
+import { ServerConfig } from '../types';
 import { 
   TRANSPORT_TYPES, 
   CONTEXT7_MCP_URL, 
@@ -16,7 +16,7 @@ import {
   ERROR_CONNECTION_TIMEOUT_TOO_LOW,
   ERROR_MIN_TOKENS_TOO_LOW,
   ERROR_DEFAULT_TOKENS_TOO_LOW
-} from '../constants/index.js';
+} from '../constants';
 /**
  * Default configuration values
  */

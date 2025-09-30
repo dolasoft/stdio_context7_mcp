@@ -52,20 +52,6 @@ export interface CacheEntry<T> {
   ttl: number;
 }
 
-export interface Logger {
-  info(message: string, meta?: any): void;
-  warn(message: string, meta?: any): void;
-  error(message: string, meta?: any): void;
-  debug(message: string, meta?: any): void;
-  startSession?(id: string, type?: 'trace' | 'execution' | 'general', metadata?: Record<string, unknown>): void;
-  endSession?(): any;
-  addTraceStep?(level: 'start' | 'complete' | 'error' | 'info', message: string, metadata?: Record<string, unknown>): void;
-  startTraceStep?(stepName: string, message: string, metadata?: Record<string, unknown>): void;
-  completeTraceStep?(stepName: string, message?: string, metadata?: Record<string, unknown>): void;
-  logCustom?(emoji: string, message: string, metadata?: Record<string, unknown>): void;
-  getAllLogs?(): any[];
-  clearOldSessions?(): void;
-}
 
 export interface Context7Client {
   resolveLibrary(libraryName: string): Promise<LibraryInfo>;
@@ -77,4 +63,7 @@ export interface CacheManager {
   set<T>(key: string, data: T, ttl?: number): void;
   clear(): void;
   has(key: string): boolean;
+  getStats(): { size: number; keys: string[] };
+  cleanup(): number;
 }
+export type Metadata = Record<string, unknown>;

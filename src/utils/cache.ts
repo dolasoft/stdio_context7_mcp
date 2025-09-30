@@ -2,15 +2,15 @@
  * In-memory cache implementation for the Context7 MCP Server
  */
 
-import { CacheManager, CacheEntry } from '../types/index.js';
+import { CacheManager, CacheEntry } from '../types';
 import { logger } from './logger.js';
-import { CACHE_TTL_MS, CACHE_CLEANUP_INTERVAL_MS } from '../constants/index.js';
+import { CACHE_TTL_MS, CACHE_CLEANUP_INTERVAL_MS } from '../constants';
 
 /**
  * In-memory cache implementation
  */
-class MemoryCache implements CacheManager {
-  private cache = new Map<string, CacheEntry<any>>();
+export class MemoryCache implements CacheManager {
+  private cache = new Map<string, CacheEntry<unknown>>();
 
   get<T>(key: string): T | null {
     const entry = this.cache.get(key);
@@ -27,7 +27,7 @@ class MemoryCache implements CacheManager {
     }
 
     logger.debug(`Cache hit: ${key}`);
-    return entry.data;
+    return entry.data as T;
   }
 
   set<T>(key: string, data: T, ttl: number = CACHE_TTL_MS): void {
@@ -103,6 +103,6 @@ export const cache: CacheManager = new MemoryCache();
  */
 export function startCacheCleanup(intervalMs: number = CACHE_CLEANUP_INTERVAL_MS): NodeJS.Timeout {
   return setInterval(() => {
-    (cache as MemoryCache).cleanup();
+    cache.cleanup();
   }, intervalMs);
 }

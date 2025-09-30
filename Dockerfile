@@ -88,13 +88,13 @@ COPY --from=builder --chown=mcp:mcp /app/dist ./dist
 COPY --from=builder --chown=mcp:mcp /app/sbom-*.json ./
 
 # Make the binary executable
-RUN chmod +x ./dist/index.js
+RUN chmod +x ./dist/server.js
 
 # Security: Remove unnecessary files and set read-only permissions
 RUN find /app -type f -name "*.md" -delete && \
     find /app -type d -exec chmod 755 {} \; && \
     find /app -type f -exec chmod 644 {} \; && \
-    chmod 755 ./dist/index.js
+    chmod 755 ./dist/server.js
 
 # Switch to non-root user
 USER mcp
@@ -104,9 +104,9 @@ ENV NODE_ENV=production \
     NODE_OPTIONS="--max-old-space-size=512" \
     NPM_CONFIG_LOGLEVEL=warn
 
-# Health check (for future HTTP transport)
-# HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-#   CMD node -e "console.log('healthy')" || exit 1
+# Health check for STDIO transport - check if process is responsive
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+  CMD echo '{"jsonrpc":"2.0","id":1,"method":"ping","params":{}}' | timeout 5 node dist/server.js --transport stdio > /dev/null || exit 1
 
 # Expose stdio transport (no port needed for stdio)
 # If HTTP transport is added in the future, expose port 3000
@@ -116,4 +116,4 @@ ENV NODE_ENV=production \
 ENTRYPOINT ["/sbin/tini", "--"]
 
 # Default command - run with stdio transport
-CMD ["node", "dist/index.js", "--transport", "stdio"]
+CMD ["node", "dist/server.js", "--transport", "stdio"]

@@ -32,7 +32,7 @@ export class LibraryService implements Context7Client {
    */
   async resolveLibrary(libraryName: string): Promise<LibraryInfo> {
     const sessionId = `resolve-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-    logger.startSession?.(sessionId, 'trace', { libraryName, operation: 'resolveLibrary' });
+    logger.startSession(sessionId, 'trace', { libraryName, operation: 'resolveLibrary' });
     
     const cacheKey = `${CACHE_KEY_PREFIX_RESOLVE}${libraryName.toLowerCase().trim()}`;
     
@@ -40,43 +40,37 @@ export class LibraryService implements Context7Client {
     const cached = cache.get<LibraryInfo>(cacheKey);
     if (cached) {
       logger.debug('Library resolved from cache', { libraryName });
-      logger.addTraceStep?.('complete', 'Library found in cache', { libraryName, cached: true });
-      logger.endSession?.();
+      logger.addTraceStep('complete', 'Library found in cache', { libraryName, cached: true });
+      logger.endSession();
       return cached;
     }
 
     logger.info('Resolving library', { libraryName });
-    logger.addTraceStep?.('start', 'Starting library resolution', { libraryName, method: 'MCP' });
+    logger.addTraceStep('start', 'Starting library resolution', { libraryName, method: 'MCP' });
 
     // Try Context7 MCP server first
     try {
-      logger.startTraceStep?.('mcp-call', 'Calling Context7 MCP server', { libraryName });
+      logger.startTraceStep('mcp-call', 'Calling Context7 MCP server', { libraryName });
       const mcpResult = await this.mcpClient.resolveLibrary(libraryName);
       if (mcpResult) {
         cache.set(cacheKey, mcpResult, this.config.cacheTTL);
-        logger.completeTraceStep?.('mcp-call', 'MCP resolution successful', { 
+        logger.completeTraceStep('mcp-call', 'MCP resolution successful', { 
           libraryName, 
           resolved: mcpResult.name,
           trustScore: mcpResult.trustScore 
         });
-        logger.addTraceStep?.('complete', 'Library resolved via MCP', { 
+        logger.addTraceStep('complete', 'Library resolved via MCP', { 
           libraryName, 
           resolved: mcpResult.name,
           trustScore: mcpResult.trustScore 
         });
-        logger.endSession?.();
+        logger.endSession();
         return mcpResult;
       }
-      logger.completeTraceStep?.('mcp-call', 'MCP returned no results', { libraryName });
+      logger.completeTraceStep('mcp-call', 'MCP returned no results', { libraryName });
     } catch (error) {
-      logger.completeTraceStep?.('mcp-call', 'MCP call failed', { 
-        libraryName, 
-        error: error instanceof Error ? error.message : String(error) 
-      });
-      logger.addTraceStep?.('error', 'MCP resolution failed, trying direct API', { 
-        libraryName, 
-        error: error instanceof Error ? error.message : String(error) 
-      });
+      logger.completeTraceStep('mcp-call', 'MCP call failed', { libraryName, error: error instanceof Error ? error.message : String(error) });
+      logger.addTraceStep('error', 'MCP resolution failed, trying direct API', { libraryName, error: error instanceof Error ? error.message : String(error) });
     }
 
     // Fallback to direct API
@@ -91,10 +85,7 @@ export class LibraryService implements Context7Client {
         return apiResult;
       }
     } catch (error) {
-      logger.warn('Direct API resolution failed', { 
-        libraryName, 
-        error: error instanceof Error ? error.message : String(error) 
-      });
+      logger.logWarning('Direct API resolution failed', error, { libraryName });
     }
 
     // If all else fails, provide helpful error message
@@ -135,10 +126,7 @@ export class LibraryService implements Context7Client {
         return mcpResult;
       }
     } catch (error) {
-      logger.warn('MCP docs failed, trying direct API', { 
-        libraryId, 
-        error: error instanceof Error ? error.message : String(error) 
-      });
+      logger.logWarning('MCP docs failed, trying direct API', error, { libraryId });
     }
 
     // Fallback to direct API
@@ -153,10 +141,7 @@ export class LibraryService implements Context7Client {
         return apiResult;
       }
     } catch (error) {
-      logger.warn('Direct API docs failed', { 
-        libraryId, 
-        error: error instanceof Error ? error.message : String(error) 
-      });
+      logger.logWarning('Direct API docs failed', error, { libraryId });
     }
 
     // If all else fails
@@ -170,9 +155,9 @@ export class LibraryService implements Context7Client {
   /**
    * Get service statistics
    */
-  getStats(): { cacheStats: any } {
+  getStats(): { cacheStats: { size: number; keys: string[] } } {
     return {
-      cacheStats: (cache as any).getStats(),
+      cacheStats: cache.getStats(),
     };
   }
 }

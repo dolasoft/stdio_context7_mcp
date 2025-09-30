@@ -3,7 +3,7 @@
  * Handles direct API calls to Context7 as a fallback
  */
 
-import { Context7APISearchResult, LibraryInfo, ServerConfig } from '../types/index.js';
+import { Context7APISearchResult, LibraryInfo, ServerConfig } from '../types';
 import { logger } from '../utils/logger.js';
 import { 
   CONTENT_TYPE_JSON, 
@@ -13,9 +13,8 @@ import {
   DEFAULT_LIMIT,
   DEFAULT_TYPE,
   URL_PARAMS,
-  HTTP_METHODS,
   AUTH_BEARER_PREFIX
-} from '../constants/index.js';
+} from '../constants';
 
 export class Context7APIClient {
   private config: ServerConfig;
@@ -35,7 +34,9 @@ export class Context7APIClient {
       const headers = this.buildHeaders();
       
       const response = await this.makeRequest(searchUrl, headers);
-      if (!response) return null;
+      if (!response) {
+        return null;
+      }
 
       const data = await this.parseResponse<Context7APISearchResult>(response);
       return this.extractLibraryFromSearchResult(data, query);
@@ -96,7 +97,7 @@ export class Context7APIClient {
    * Parse JSON response
    */
   private async parseResponse<T>(response: Response): Promise<T> {
-    return await response.json();
+    return await response.json() as T;
   }
 
   /**
@@ -140,7 +141,9 @@ export class Context7APIClient {
       const headers = this.buildHeaders();
       
       const response = await this.makeRequest(docsUrl, headers);
-      if (!response) return null;
+      if (!response) {
+        return null;
+      }
 
       const docs = await response.text();
       logger.debug('Library docs retrieved via direct API', { 

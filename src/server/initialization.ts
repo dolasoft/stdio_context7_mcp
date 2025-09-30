@@ -4,6 +4,7 @@
 
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
+import type { Transport } from '@modelcontextprotocol/sdk/shared/transport.js';
 import {
   ListToolsRequestSchema,
   CallToolRequestSchema,
@@ -14,14 +15,15 @@ import { startCacheCleanup } from '../utils/cache.js';
 import {
   createListToolsHandler,
   createToolExecutionHandler,
-} from '../handlers/index.js';
+} from '../handlers';
 import {
   SERVER_NAME,
   SERVER_VERSION,
   TRANSPORT_TYPES,
   SHUTDOWN_DELAY_MS,
-} from '../constants/index.js';
-import { ServerConfig } from '../types/index.js';
+  INACTIVITY_TIMEOUT_MS,
+} from '../constants';
+import { ServerConfig } from '../types';
 
 /**
  * Initialize the library service and start cache cleanup
@@ -41,7 +43,7 @@ export function initializeServices(config: ServerConfig): LibraryService {
 /**
  * Create and configure the MCP server
  */
-export function createMCPServer(libraryService: LibraryService): Server {
+export function createMCPServer(): Server {
   logger.info('🏗️ Creating MCP server', {
     name: SERVER_NAME,
     version: SERVER_VERSION,
@@ -68,8 +70,17 @@ export function createMCPServer(libraryService: LibraryService): Server {
 export function setupRequestHandlers(server: Server, libraryService: LibraryService): void {
   logger.info('🔗 Setting up request handlers');
   
-  server.setRequestHandler(ListToolsRequestSchema, createListToolsHandler());
-  server.setRequestHandler(CallToolRequestSchema, createToolExecutionHandler(libraryService));
+  // List tools handler
+  server.setRequestHandler(ListToolsRequestSchema, async () => {
+    updateActivity();
+    return await createListToolsHandler()();
+  });
+  
+  // Tool execution handler
+  server.setRequestHandler(CallToolRequestSchema, async (request) => {
+    updateActivity();
+    return await createToolExecutionHandler(libraryService)(request);
+  });
 }
 
 /**
@@ -89,7 +100,7 @@ export function createTransport(transportType: string) {
 /**
  * Start the MCP server with the given transport
  */
-export async function startServer(server: Server, transport: any): Promise<void> {
+export async function startServer(server: Server, transport: Transport): Promise<void> {
   logger.info('🚀 Starting server', { transport: transport.constructor.name });
   
   await server.connect(transport);
@@ -100,11 +111,36 @@ export async function startServer(server: Server, transport: any): Promise<void>
 /**
  * Set up graceful shutdown handlers
  */
+// Global activity tracker
+let lastActivity = Date.now();
+
+export function updateActivity(): void {
+  lastActivity = Date.now();
+}
+
 export function setupGracefulShutdown(server: Server): void {
   logger.info('🛡️ Setting up graceful shutdown handlers');
 
+  // Set up inactivity timeout (configurable, default 5 minutes)
+  const INACTIVITY_TIMEOUT = process.env.INACTIVITY_TIMEOUT_MS 
+    ? parseInt(process.env.INACTIVITY_TIMEOUT_MS, 10) 
+    : INACTIVITY_TIMEOUT_MS;
+  
+  const checkInactivity = () => {
+    if (Date.now() - lastActivity > INACTIVITY_TIMEOUT) {
+      logger.info('⏰ Inactivity timeout reached, shutting down...');
+      shutdown('INACTIVITY_TIMEOUT');
+    }
+  };
+  
+  // Check for inactivity every minute
+  const inactivityTimer = setInterval(checkInactivity, 60000);
+
   const shutdown = async (signal: string) => {
     logger.info(`🛑 Received ${signal}, shutting down gracefully...`);
+    
+    // Clear the inactivity timer
+    clearInterval(inactivityTimer);
     
     try {
       // Close the server
@@ -128,7 +164,10 @@ export function setupGracefulShutdown(server: Server): void {
   
   // Handle uncaught exceptions
   process.on('uncaughtException', (error) => {
-    logger.error('❌ Uncaught exception', { error: error.message, stack: error.stack });
+    logger.error('❌ Uncaught exception', { 
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined
+    });
     shutdown('UNCAUGHT_EXCEPTION');
   });
   

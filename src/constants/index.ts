@@ -21,6 +21,7 @@ export const MIN_CONNECTION_TIMEOUT_MS = 1000;
 export const CACHE_TTL_MS = 1000 * 60 * 60; // 1 hour
 export const CACHE_CLEANUP_INTERVAL_MS = 300000; // 5 minutes
 export const SHUTDOWN_DELAY_MS = 100; // Graceful shutdown delay
+export const INACTIVITY_TIMEOUT_MS = 5 * 60 * 1000; // 5 minutes default
 
 // API endpoints
 export const CONTEXT7_MCP_URL = 'https://mcp.context7.com/mcp';

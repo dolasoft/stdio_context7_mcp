@@ -3,14 +3,14 @@
  * Handles communication with the Context7 MCP server via HTTP
  */
 
-import { Context7MCPResponse, LibraryInfo, ServerConfig } from '../types/index.js';
+import { Context7MCPResponse, LibraryInfo, ServerConfig } from '../types';
 import { logger } from '../utils/logger.js';
 import { 
   CONTENT_TYPE_JSON, 
   ACCEPT_HEADER, 
   AUTH_BEARER_PREFIX,
   DEFAULT_DESCRIPTION
-} from '../constants/index.js';
+} from '../constants';
 
 export class Context7MCPClient {
   private sessionId: string | null = null;
@@ -23,7 +23,7 @@ export class Context7MCPClient {
   /**
    * Make a direct HTTP call to Context7 MCP server
    */
-  private async callMCP(method: string, params: any): Promise<Context7MCPResponse | null> {
+  private async callMCP(method: string, params: Record<string, unknown>): Promise<Context7MCPResponse | null> {
     try {
       const headers: Record<string, string> = {
         'Content-Type': CONTENT_TYPE_JSON,
@@ -59,7 +59,7 @@ export class Context7MCPClient {
       
       for (const line of lines) {
         if (line.startsWith('data: ')) {
-          const data = JSON.parse(line.substring(6));
+          const data = JSON.parse(line.substring(6)) as Context7MCPResponse;
           
           // Extract session ID from response headers
           const sessionId = response.headers.get('MCP-Session-Id');
@@ -181,7 +181,7 @@ export class Context7MCPClient {
               description,
               trustScore,
               codeSnippets,
-              versions: versions.length > 0 ? versions : undefined,
+              ...(versions.length > 0 && { versions }),
             };
           }
         }

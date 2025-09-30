@@ -95,7 +95,7 @@ This server is **optimized for Claude Code**. Add to your MCP configuration:
     "stdio-context7": {
       "command": "node",
       "args": [
-        "/absolute/path/to/STDIO_Context7_MCP/dist/index.js",
+        "/path/to/STDIO_Context7_MCP/dist/server.js",
         "--transport",
         "stdio"
       ]
@@ -114,6 +114,8 @@ This server is **optimized for Claude Code**. Add to your MCP configuration:
         "run",
         "-i",
         "--rm",
+        "--stop-timeout",
+        "10",
         "yourusername/stdio-context7-mcp:latest"
       ]
     }
@@ -145,7 +147,7 @@ Add to your `claude_desktop_config.json`:
     "stdio-context7": {
       "command": "node",
       "args": [
-        "/absolute/path/to/STDIO_Context7_MCP/dist/index.js",
+        "/path/to/STDIO_Context7_MCP/dist/server.js",
         "--api-key",
         "YOUR_API_KEY"
       ]
@@ -163,7 +165,7 @@ Go to Settings → Cursor Settings → MCP → Add new global MCP server:
   "mcpServers": {
     "stdio-context7": {
       "command": "node",
-      "args": ["/absolute/path/to/STDIO_Context7_MCP/dist/index.js"]
+      "args": ["/path/to/STDIO_Context7_MCP/dist/server.js"]
     }
   }
 }
@@ -178,7 +180,7 @@ Add to your VS Code MCP settings:
   "mcpServers": {
     "stdio-context7": {
       "command": "node",
-      "args": ["/absolute/path/to/STDIO_Context7_MCP/dist/index.js"]
+      "args": ["/path/to/STDIO_Context7_MCP/dist/server.js"]
     }
   }
 }
@@ -191,7 +193,14 @@ Add to your VS Code MCP settings:
   "mcpServers": {
     "stdio-context7": {
       "command": "docker",
-      "args": ["run", "-i", "stdio-context7-mcp"]
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "--stop-timeout",
+        "10",
+        "stdio-context7-mcp"
+      ]
     }
   }
 }

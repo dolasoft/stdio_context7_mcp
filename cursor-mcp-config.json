@@ -1,0 +1,18 @@
+{
+  "mcpServers": {
+    "stdio-context7-docker": {
+      "command": "docker",
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "--stop-timeout",
+        "10",
+        "stdio-context7-mcp:test"
+      ],
+      "env": {
+        "NODE_ENV": "production"
+      }
+    }
+  }
+}

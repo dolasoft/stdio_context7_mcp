@@ -6,12 +6,13 @@
 import { z } from 'zod';
 import { LibraryService } from '../services/library-service.js';
 import { logger } from '../utils/logger.js';
+import { updateActivity } from '../server/initialization.js';
 import { 
   TOOL_RESOLVE_LIBRARY_ID, 
   TOOL_GET_LIBRARY_DOCS, 
   MIN_TOKENS, 
   DEFAULT_TOKENS 
-} from '../constants/index.js';
+} from '../constants';
 
 // Request schemas
 const ResolveLibraryIdSchema = z.object({
@@ -83,6 +84,7 @@ export function createListToolsHandler() {
  */
 export function createResolveLibraryHandler(libraryService: LibraryService) {
   return async (args: unknown) => {
+    updateActivity(); // Track activity
     const parsed = ResolveLibraryIdSchema.parse(args);
     
     try {
@@ -121,6 +123,7 @@ export function createResolveLibraryHandler(libraryService: LibraryService) {
  */
 export function createGetLibraryDocsHandler(libraryService: LibraryService) {
   return async (args: unknown) => {
+    updateActivity(); // Track activity
     const parsed = GetLibraryDocsSchema.parse(args);
     const maxTokens = parsed.tokens && parsed.tokens >= MIN_TOKENS ? parsed.tokens : MIN_TOKENS;
 

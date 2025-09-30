@@ -2,7 +2,6 @@
   "name": "stdio_context7_mcp",
   "version": "1.0.0",
   "description": "STDIO Context7 MCP Server - Up-to-date code documentation for LLMs and AI code editors",
-  "type": "module",
   "main": "dist/server.js",
   "bin": {
     "stdio-context7-mcp": "./dist/server.js"
@@ -11,11 +10,14 @@
     "build": "tsc && chmod +x dist/server.js",
     "start": "node dist/server.js",
     "dev": "npm run build && npm start",
+    "lint": "eslint src --ext .ts",
+    "lint:fix": "npm run lint -- --fix",
     "test": "vitest",
-    "test:watch": "vitest --watch",
-    "test:ui": "vitest --ui",
-    "test:coverage": "vitest --coverage",
-    "test:ci": "vitest run --coverage"
+    "test:watch": "npm run test -- --watch",
+    "test:ui": "npm run test -- --ui",
+    "test:coverage": "npm run test -- --coverage",
+    "test:ci": "npm run test -- --run --coverage",
+    "ci": "npm run lint && npm run test:ci && npm run build"
   },
   "keywords": [
     "mcp",
@@ -33,9 +35,13 @@
     "zod": "^3.25.76"
   },
   "devDependencies": {
+    "@eslint/js": "^9.36.0",
     "@types/node": "^24.6.0",
+    "@typescript-eslint/eslint-plugin": "^8.45.0",
+    "@typescript-eslint/parser": "^8.45.0",
     "@vitest/coverage-v8": "^3.2.4",
     "@vitest/ui": "^3.2.4",
+    "eslint": "^9.36.0",
     "supertest": "^7.1.4",
     "typescript": "^5.9.2",
     "vitest": "^3.2.4"
