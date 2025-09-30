@@ -18,59 +18,25 @@ const dolasoftLogger = getLogger({
 });
 
 /**
- * Simple logger that just uses the library directly
- * No unnecessary wrapping or abstraction
+ * Export the configured logger directly - no unnecessary wrapping
+ * Only add custom helpers that provide real value
  */
 export const logger = {
-  info: (message: string, meta?: Record<string, unknown>) => {
-    dolasoftLogger.info(message, meta || {});
-  },
+  // Direct passthrough to the underlying logger
+  info: dolasoftLogger.info.bind(dolasoftLogger),
+  warn: dolasoftLogger.warn.bind(dolasoftLogger),
+  error: dolasoftLogger.error.bind(dolasoftLogger),
+  debug: dolasoftLogger.debug.bind(dolasoftLogger),
+  startSession: dolasoftLogger.startSession.bind(dolasoftLogger),
+  endSession: dolasoftLogger.endSession.bind(dolasoftLogger),
+  addTraceStep: dolasoftLogger.addTraceStep.bind(dolasoftLogger),
+  startTraceStep: dolasoftLogger.startTraceStep.bind(dolasoftLogger),
+  completeTraceStep: dolasoftLogger.completeTraceStep.bind(dolasoftLogger),
+  logCustom: dolasoftLogger.logCustom.bind(dolasoftLogger),
+  getAllLogs: dolasoftLogger.getAllLogs.bind(dolasoftLogger),
+  clearOldSessions: dolasoftLogger.clearOldSessions.bind(dolasoftLogger),
 
-  warn: (message: string, meta?: Record<string, unknown>) => {
-    dolasoftLogger.warn(message, meta || {});
-  },
-
-  error: (message: string, meta?: Record<string, unknown>) => {
-    dolasoftLogger.error(message, meta || {});
-  },
-
-  debug: (message: string, meta?: Record<string, unknown>) => {
-    dolasoftLogger.debug(message, meta || {});
-  },
-
-  startSession: (id: string, type: 'trace' | 'execution' | 'general' = 'general', metadata?: Record<string, unknown>) => {
-    dolasoftLogger.startSession(id, type, metadata || {});
-  },
-
-  endSession: () => {
-    return dolasoftLogger.endSession();
-  },
-
-  addTraceStep: (level: 'start' | 'complete' | 'error' | 'info', message: string, metadata?: Record<string, unknown>) => {
-    dolasoftLogger.addTraceStep(level, message, metadata || {});
-  },
-
-  startTraceStep: (stepName: string, message: string, metadata?: Record<string, unknown>) => {
-    dolasoftLogger.startTraceStep(stepName, message, metadata || {});
-  },
-
-  completeTraceStep: (stepName: string, message?: string, metadata?: Record<string, unknown>) => {
-    dolasoftLogger.completeTraceStep(stepName, message, metadata || {});
-  },
-
-  logCustom: (emoji: string, message: string, metadata?: Record<string, unknown>) => {
-    dolasoftLogger.logCustom(emoji, message, metadata || {});
-  },
-
-  getAllLogs: () => {
-    return dolasoftLogger.getAllLogs();
-  },
-
-  clearOldSessions: () => {
-    dolasoftLogger.clearOldSessions();
-  },
-
-  // Simple error logging helpers
+  // Custom error logging helpers that add value
   logError: (message: string, error: unknown, context?: Record<string, unknown>) => {
     const errorMessage = error instanceof Error ? error.message : String(error);
     dolasoftLogger.error(message, { error: errorMessage, ...context });
