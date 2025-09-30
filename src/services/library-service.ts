@@ -85,7 +85,7 @@ export class LibraryService implements Context7Client {
         return apiResult;
       }
     } catch (error) {
-      logger.logWarning('Direct API resolution failed', error, { libraryName });
+      logger.warn('Direct API resolution failed', { error: error instanceof Error ? error.message : String(error), libraryName });
     }
 
     // If all else fails, provide helpful error message
@@ -126,7 +126,7 @@ export class LibraryService implements Context7Client {
         return mcpResult;
       }
     } catch (error) {
-      logger.logWarning('MCP docs failed, trying direct API', error, { libraryId });
+      logger.warn('MCP docs failed, trying direct API', { error: error instanceof Error ? error.message : String(error), libraryId });
     }
 
     // Fallback to direct API
@@ -141,7 +141,7 @@ export class LibraryService implements Context7Client {
         return apiResult;
       }
     } catch (error) {
-      logger.logWarning('Direct API docs failed', error, { libraryId });
+      logger.warn('Direct API docs failed', { error: error instanceof Error ? error.message : String(error), libraryId });
     }
 
     // If all else fails

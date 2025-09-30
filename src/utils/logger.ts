@@ -19,31 +19,5 @@ const dolasoftLogger = getLogger({
 
 /**
  * Export the configured logger directly - no unnecessary wrapping
- * Only add custom helpers that provide real value
  */
-export const logger = {
-  // Direct passthrough to the underlying logger
-  info: dolasoftLogger.info.bind(dolasoftLogger),
-  warn: dolasoftLogger.warn.bind(dolasoftLogger),
-  error: dolasoftLogger.error.bind(dolasoftLogger),
-  debug: dolasoftLogger.debug.bind(dolasoftLogger),
-  startSession: dolasoftLogger.startSession.bind(dolasoftLogger),
-  endSession: dolasoftLogger.endSession.bind(dolasoftLogger),
-  addTraceStep: dolasoftLogger.addTraceStep.bind(dolasoftLogger),
-  startTraceStep: dolasoftLogger.startTraceStep.bind(dolasoftLogger),
-  completeTraceStep: dolasoftLogger.completeTraceStep.bind(dolasoftLogger),
-  logCustom: dolasoftLogger.logCustom.bind(dolasoftLogger),
-  getAllLogs: dolasoftLogger.getAllLogs.bind(dolasoftLogger),
-  clearOldSessions: dolasoftLogger.clearOldSessions.bind(dolasoftLogger),
-
-  // Custom error logging helpers that add value
-  logError: (message: string, error: unknown, context?: Record<string, unknown>) => {
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    dolasoftLogger.error(message, { error: errorMessage, ...context });
-  },
-
-  logWarning: (message: string, error: unknown, context?: Record<string, unknown>) => {
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    dolasoftLogger.warn(message, { error: errorMessage, ...context });
-  },
-};
+export const logger = dolasoftLogger;
