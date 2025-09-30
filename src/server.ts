@@ -54,6 +54,6 @@ async function main() {
 
 // Start the server
 main().catch((error) => {
-  logger.error('❌ Unhandled error in main', { error });
+  logger.error('❌ Unhandled error in main', { error: error as Error });
   process.exit(1);
 });

@@ -26,3 +26,14 @@ Thumbs.db
 # Testing
 coverage/
 .nyc_output/
+*.lcov
+
+# TypeScript
+*.tsbuildinfo
+
+# Temporary files
+*.tmp
+*.temp
+
+# Docker
+.dockerignore

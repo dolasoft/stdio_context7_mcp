@@ -84,6 +84,8 @@ docker run -i stdio-context7-mcp --api-key YOUR_API_KEY
 
 ## MCP Client Configuration
 
+> **📁 Configuration Examples**: See the [`examples/`](./examples/) directory for ready-to-use configuration files for different MCP clients.
+
 ### 🎯 Claude Code (Recommended)
 
 This server is **optimized for Claude Code**. Add to your MCP configuration:
@@ -318,13 +320,24 @@ The server fetches up-to-date documentation directly from Context7's live API.
 
 ```
 STDIO_Context7_MCP/
-├── src/
-│   └── index.ts           # Main server implementation
-├── dist/                  # Compiled JavaScript
+├── src/                   # Source code
+│   ├── config/           # Configuration management
+│   ├── constants/        # Application constants
+│   ├── handlers/         # MCP request handlers
+│   ├── server/           # Server initialization
+│   ├── services/         # Business logic services
+│   ├── types/            # TypeScript type definitions
+│   └── utils/            # Utility functions
+├── examples/              # MCP client configuration examples
+│   ├── claude-desktop.json
+│   ├── cursor.json
+│   ├── docker.json
+│   └── README.md
+├── tests/                 # Test suite
 ├── package.json           # Project configuration
 ├── tsconfig.json          # TypeScript config
-├── Dockerfile             # Docker image
-├── PLAN.md               # Development plan
+├── Dockerfile             # Docker image definition
+├── build-docker.sh        # Docker build script
 └── README.md             # This file
 ```
 
@@ -350,33 +363,79 @@ npx @modelcontextprotocol/inspector node dist/index.js
 
 ## Docker Deployment
 
-### Building the Image
+### Security Features
+
+This MCP server Docker image is built with enterprise-grade security features:
+
+- **SBOMs (Software Bill of Materials)**: Automatically generates CycloneDX SBOMs for vulnerability scanning
+- **Provenance Attestations**: Build provenance metadata for supply chain security verification
+- **Image Signing Support**: Compatible with Cosign for cryptographic signing
+- **Multi-Architecture Support**: Builds for `linux/amd64`, `linux/arm64`, `linux/arm/v7`
+- **Security Hardening**: Non-root user (UID 1001), minimal Alpine Linux base, updated CA certificates
+
+### Quick Start
+
+#### Using the Build Script
 
 ```bash
-docker build -t stdio-context7-mcp .
+# Build with default settings (multi-arch)
+./build-docker.sh
+
+# Build for single platform (faster for testing)
+PLATFORMS=linux/amd64 ./build-docker.sh
+
+# Build and push to registry
+REGISTRY=docker.io/yourusername IMAGE_NAME=stdio-context7-mcp ./build-docker.sh
 ```
 
-### Running the Container
+#### Manual Build
 
 ```bash
-# Basic usage
-docker run -i stdio-context7-mcp
+# Single architecture (local testing)
+docker build -t stdio-context7-mcp:latest .
+docker run -i stdio-context7-mcp:latest
 
-# With environment variables
-docker run -i -e API_KEY=your_key stdio-context7-mcp
-
-# Mount configuration
-docker run -i -v $(pwd)/config:/app/config stdio-context7-mcp
+# Multi-architecture build with security features
+docker buildx create --name mcp-builder --use
+docker buildx build \
+  --platform linux/amd64,linux/arm64,linux/arm/v7 \
+  --tag yourusername/stdio-context7-mcp:1.0.0 \
+  --provenance=true \
+  --sbom=true \
+  --push \
+  .
 ```
 
-### Publishing to Docker Hub
+### Security Best Practices
 
 ```bash
-# Tag the image
-docker tag stdio-context7-mcp yourusername/stdio-context7-mcp:latest
+# Vulnerability scanning
+trivy image --severity HIGH,CRITICAL stdio-context7-mcp:latest
 
-# Push to Docker Hub
-docker push yourusername/stdio-context7-mcp:latest
+# Run with security hardening
+docker run -i \
+  --read-only \
+  --security-opt=no-new-privileges:true \
+  --cap-drop=ALL \
+  --network=none \
+  stdio-context7-mcp:latest
+```
+
+### Image Signing (Optional)
+
+```bash
+# Install Cosign
+brew install cosign  # macOS
+# or download from GitHub releases
+
+# Generate keys
+cosign generate-key-pair
+
+# Sign image
+cosign sign --key cosign.key yourusername/stdio-context7-mcp:1.0.0
+
+# Verify signature
+cosign verify --key cosign.pub yourusername/stdio-context7-mcp:1.0.0
 ```
 
 ## Troubleshooting
@@ -434,7 +493,7 @@ MIT License - see LICENSE file for details
 
 ## Support
 
-- 📖 Documentation: See [PLAN.md](./PLAN.md) for technical details
+- 📖 Documentation: This README contains all necessary information
 - 🐛 Issues: Report bugs in the issue tracker
 - 💬 Discussions: Join the community discussions
 

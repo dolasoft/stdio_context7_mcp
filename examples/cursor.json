@@ -1,6 +1,6 @@
 {
   "mcpServers": {
-    "stdio-context7-docker": {
+    "stdio-context7": {
       "command": "docker",
       "args": [
         "run",
@@ -8,11 +8,8 @@
         "--rm",
         "--stop-timeout",
         "10",
-        "stdio-context7-mcp:test"
-      ],
-      "env": {
-        "NODE_ENV": "production"
-      }
+        "yourusername/stdio-context7-mcp:latest"
+      ]
     }
   }
 }

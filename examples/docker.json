@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "stdio-context7": {
+      "command": "docker",
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "--stop-timeout",
+        "10",
+        "yourusername/stdio-context7-mcp:latest"
+      ]
+    }
+  }
+}
