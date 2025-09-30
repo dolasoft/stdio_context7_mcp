@@ -1,4 +1,6 @@
 {
+  "author": "DolaSoft",
+  "license": "MIT",
   "name": "stdio_context7_mcp",
   "version": "1.0.0",
   "description": "STDIO Context7 MCP Server - Up-to-date code documentation for LLMs and AI code editors",
@@ -27,8 +29,6 @@
     "documentation",
     "context7"
   ],
-  "author": "",
-  "license": "MIT",
   "dependencies": {
     "@dolasoftfree/logger": "^3.1.1",
     "@modelcontextprotocol/sdk": "^1.18.2",
