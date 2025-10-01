@@ -4,7 +4,7 @@
  */
 
 import { Context7MCPResponse, LibraryInfo, ServerConfig } from '../types';
-import { logger } from '../utils/logger.js';
+import { logger } from '../utils';
 import { 
   CONTENT_TYPE_JSON, 
   ACCEPT_HEADER, 

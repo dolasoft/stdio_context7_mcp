@@ -4,9 +4,9 @@
  */
 
 import { z } from 'zod';
-import { LibraryService } from '../services/library-service.js';
-import { logger } from '../utils/logger.js';
-import { updateActivity } from '../server/initialization.js';
+import { LibraryService } from '../services/library-service';
+import { logger } from '../utils';
+import { updateActivity } from '../server/initialization';
 import { 
   TOOL_RESOLVE_LIBRARY_ID, 
   TOOL_GET_LIBRARY_DOCS, 

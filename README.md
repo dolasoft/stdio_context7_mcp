@@ -1,24 +1,24 @@
 # STDIO Context7 MCP Server
 
-> Alternative Context7 MCP server built specifically for seamless integration with Claude Code
+> Alternative Context7 MCP server built specifically for seamless integration with Cursor and other MCP-compatible AI assistants
 
-An alternative implementation of the Context7 MCP server, designed from the ground up to work seamlessly with **Claude Code** and other MCP-compatible AI assistants. This server provides up-to-date library documentation and code examples directly through STDIO transport.
+An alternative implementation of the Context7 MCP server, designed from the ground up to work seamlessly with **Cursor** and other MCP-compatible AI assistants. This server provides up-to-date library documentation and code examples directly through STDIO transport.
 
 ## 🎯 Purpose
 
 This is an **alternative MCP server** to the original Context7, built with the specific purpose of:
-- **Seamless Claude Code Integration**: Optimized for the Claude Code CLI experience
+- **Seamless Cursor Integration**: Optimized for the Cursor IDE experience
 - **Enhanced STDIO Transport**: Direct, efficient communication via standard input/output
-- **Developer-First Design**: Built by developers, for developers using Claude Code
+- **Developer-First Design**: Built by developers, for developers using Cursor
 - **Production-Ready Security**: Enterprise-grade Docker image with SBOMs, provenance, and signing support
 
 ## ✨ Features
 
-- 🤖 **Claude Code Optimized**: Purpose-built for seamless Claude Code integration
+- 🤖 **Cursor Optimized**: Purpose-built for seamless Cursor integration
 - 🔍 **Library Resolution**: Resolve library names to Context7-compatible IDs
 - 📚 **Documentation Retrieval**: Fetch up-to-date documentation and code examples
 - 🎯 **Topic Filtering**: Focus on specific topics within libraries
-- ⚡ **STDIO Transport**: Fast, local integration with MCP clients
+- ⚡ **STDIO Transport**: Fast, local integration with MCP clients (HTTP/SSE planned)
 - 🐳 **Production Docker**: Multi-arch with SBOMs, provenance, and security hardening
 - 🔐 **Enterprise Security**: Non-root user, minimal attack surface, signed images
 - 🌍 **Multi-Architecture**: Supports amd64, arm64, and arm/v7 platforms
@@ -35,7 +35,7 @@ This is an **alternative MCP server** to the original Context7, built with the s
 
 ```bash
 # Clone the repository
-git clone <repository-url>
+git clone https://github.com/dolasoft/stdio_context7_mcp.git
 cd STDIO_Context7_MCP
 
 # Install dependencies
@@ -71,24 +71,26 @@ npm run dev
 
 ```bash
 # Run the container (stdio mode)
-docker run -i stdio-context7-mcp
+docker run -i dolasoft/stdio-context7-mcp:latest
 
 # Run with API key
-docker run -i stdio-context7-mcp --api-key YOUR_API_KEY
+docker run -i dolasoft/stdio-context7-mcp:latest --api-key YOUR_API_KEY
 ```
 
 ### CLI Arguments
 
-- `--transport <stdio|http>`: Transport protocol to use (default: stdio)
+- `--transport <stdio|http|sse>`: Transport protocol to use (default: stdio)
 - `--api-key <key>`: Context7 API key for authentication (optional, get one at [context7.com/dashboard](https://context7.com/dashboard) for higher rate limits)
+
+**Note**: Currently only `stdio` transport is implemented. `http` and `sse` transports are planned for future releases.
 
 ## MCP Client Configuration
 
 > **📁 Configuration Examples**: See the [`examples/`](./examples/) directory for ready-to-use configuration files for different MCP clients.
 
-### 🎯 Claude Code (Recommended)
+### 🎯 Cursor (Recommended)
 
-This server is **optimized for Claude Code**. Add to your MCP configuration:
+This server is **optimized for Cursor**. Add to your MCP configuration:
 
 **Using Node.js:**
 ```json
@@ -118,7 +120,7 @@ This server is **optimized for Claude Code**. Add to your MCP configuration:
         "--rm",
         "--stop-timeout",
         "10",
-        "yourusername/stdio-context7-mcp:latest"
+        "dolasoft/stdio-context7-mcp:latest"
       ]
     }
   }
@@ -167,7 +169,7 @@ Go to Settings → Cursor Settings → MCP → Add new global MCP server:
   "mcpServers": {
     "stdio-context7": {
       "command": "node",
-      "args": ["/path/to/STDIO_Context7_MCP/dist/server.js"]
+      "args": ["/path/to/STDIO_Context7_MCP/dist/src/server.js"]
     }
   }
 }
@@ -182,7 +184,7 @@ Add to your VS Code MCP settings:
   "mcpServers": {
     "stdio-context7": {
       "command": "node",
-      "args": ["/path/to/STDIO_Context7_MCP/dist/server.js"]
+      "args": ["/path/to/STDIO_Context7_MCP/dist/src/server.js"]
     }
   }
 }
@@ -201,7 +203,7 @@ Add to your VS Code MCP settings:
         "--rm",
         "--stop-timeout",
         "10",
-        "stdio-context7-mcp"
+        "dolasoft/stdio-context7-mcp:latest"
       ]
     }
   }
@@ -327,17 +329,27 @@ STDIO_Context7_MCP/
 │   ├── server/           # Server initialization
 │   ├── services/         # Business logic services
 │   ├── types/            # TypeScript type definitions
-│   └── utils/            # Utility functions
+│   ├── utils/            # Utility functions
+│   └── server.ts         # Main entry point
 ├── examples/              # MCP client configuration examples
-│   ├── claude-desktop.json
-│   ├── cursor.json
-│   ├── docker.json
+│   ├── with-api-key.json
+│   ├── without-api-key.json
 │   └── README.md
 ├── tests/                 # Test suite
+│   ├── unit/             # Unit tests
+│   ├── integration/      # Integration tests
+│   └── setup.ts          # Test setup
+├── dist/                  # Compiled output
+│   └── src/              # Compiled TypeScript
+├── coverage/              # Test coverage reports
 ├── package.json           # Project configuration
 ├── tsconfig.json          # TypeScript config
+├── tsconfig.test.json     # Test TypeScript config
+├── vitest.config.ts       # Vitest configuration
+├── eslint.config.js       # ESLint configuration
 ├── Dockerfile             # Docker image definition
 ├── build-docker.sh        # Docker build script
+├── run-mcp.sh            # MCP runner script
 └── README.md             # This file
 ```
 
@@ -474,8 +486,8 @@ Contributions are welcome! Please follow these steps:
 ## Roadmap
 
 - [x] Real Context7 API integration ✅
+- [x] Caching mechanism for better performance ✅
 - [ ] HTTP/SSE transport support
-- [ ] Caching mechanism for better performance
 - [ ] Version-specific documentation
 - [ ] Search functionality across libraries
 - [ ] Rate limiting and quota management

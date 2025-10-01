@@ -9,9 +9,9 @@ import {
   ListToolsRequestSchema,
   CallToolRequestSchema,
 } from '@modelcontextprotocol/sdk/types.js';
-import { LibraryService } from '../services/library-service.js';
-import { logger } from '../utils/logger.js';
-import { startCacheCleanup } from '../utils/cache.js';
+import { LibraryService } from '../services/library-service';
+import { logger } from '../utils';
+import { startCacheCleanup } from '../utils';
 import {
   createListToolsHandler,
   createToolExecutionHandler,
@@ -77,7 +77,7 @@ export function setupRequestHandlers(server: Server, libraryService: LibraryServ
   });
   
   // Tool execution handler
-  server.setRequestHandler(CallToolRequestSchema, async (request) => {
+  server.setRequestHandler(CallToolRequestSchema, async (request: { params: { name: string; arguments?: unknown } }) => {
     updateActivity();
     return await createToolExecutionHandler(libraryService)(request);
   });
@@ -86,7 +86,7 @@ export function setupRequestHandlers(server: Server, libraryService: LibraryServ
 /**
  * Create the appropriate transport based on configuration
  */
-export function createTransport(transportType: string) {
+export function createTransport(transportType: string): Transport {
   logger.info('🚀 Creating transport', { transport: transportType });
 
   switch (transportType) {

@@ -55,8 +55,8 @@ LABEL org.opencontainers.image.description="MCP server providing up-to-date libr
 LABEL org.opencontainers.image.version="1.0.0"
 LABEL org.opencontainers.image.vendor="DolaSoft"
 LABEL org.opencontainers.image.licenses="MIT"
-LABEL org.opencontainers.image.source="https://github.com/yourusername/STDIO_Context7_MCP"
-LABEL org.opencontainers.image.documentation="https://github.com/yourusername/STDIO_Context7_MCP/blob/main/README.md"
+LABEL org.opencontainers.image.source="https://github.com/dolasoft/stdio_context7_mcp"
+LABEL org.opencontainers.image.documentation="https://github.com/dolasoft/stdio_context7_mcp/blob/main/README.md"
 
 # Security hardening: Install dumb-init for proper signal handling and update CA certificates
 RUN apk add --no-cache \

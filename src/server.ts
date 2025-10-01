@@ -7,8 +7,8 @@
  * up-to-date code documentation for LLMs and AI code editors.
  */
 
-import { getConfig, validateConfig } from './config/index.js';
-import { logger } from './utils/logger.js';
+import { getConfig, validateConfig } from './config';
+import { logger } from './utils';
 import {
   initializeServices,
   createMCPServer,
@@ -16,8 +16,8 @@ import {
   createTransport,
   startServer,
   setupGracefulShutdown,
-} from './server/initialization.js';
-import { SERVER_NAME, SERVER_VERSION } from './constants/index.js';
+} from './server/initialization';
+import { SERVER_NAME, SERVER_VERSION } from './constants';
 
 /**
  * Main server initialization and startup

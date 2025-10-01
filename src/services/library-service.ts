@@ -3,17 +3,17 @@
  * Main service that orchestrates library resolution and documentation retrieval
  */
 
-import { LibraryInfo, Context7Client, ServerConfig } from '../types/index.js';
-import { Context7MCPClient } from './context7-mcp-client.js';
-import { Context7APIClient } from './context7-api-client.js';
-import { cache } from '../utils/cache.js';
-import { logger } from '../utils/logger.js';
+import { LibraryInfo, Context7Client, ServerConfig } from '../types';
+import { Context7MCPClient } from './context7-mcp-client';
+import { Context7APIClient } from './context7-api-client';
+import { cache } from '../utils/cache';
+import { logger } from '../utils/logger';
 import { 
   CACHE_KEY_PREFIX_RESOLVE, 
   CACHE_KEY_PREFIX_DOCS,
   ERROR_LIBRARY_NOT_FOUND,
   ERROR_DOCS_RETRIEVAL_FAILED
-} from '../constants/index.js';
+} from '../constants';
 
 export class LibraryService implements Context7Client {
   private mcpClient: Context7MCPClient;

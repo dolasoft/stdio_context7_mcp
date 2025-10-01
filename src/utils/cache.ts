@@ -3,7 +3,7 @@
  */
 
 import { CacheManager, CacheEntry } from '../types';
-import { logger } from './logger.js';
+import { logger } from './logger';
 import { CACHE_TTL_MS, CACHE_CLEANUP_INTERVAL_MS } from '../constants';
 
 /**

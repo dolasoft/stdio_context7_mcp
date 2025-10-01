@@ -2,7 +2,7 @@
  * Utility exports
  */
 
-export { logger } from './logger.js';
-export { cache, startCacheCleanup } from './cache.js';
-export { getErrorMessage } from './error-handler.js';
+export { logger } from './logger';
+export { cache, startCacheCleanup } from './cache';
+export { getErrorMessage } from './error-handler';
 export type { Metadata } from '../types';
