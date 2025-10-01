@@ -4,7 +4,7 @@
 # ============================================================================
 # Builder Stage - Compile TypeScript and generate SBOMs
 # ============================================================================
-FROM --platform=$BUILDPLATFORM node:18-alpine AS builder
+FROM --platform=$BUILDPLATFORM node:20-alpine AS builder
 
 # Build arguments for multi-arch support
 ARG TARGETPLATFORM
@@ -27,8 +27,8 @@ WORKDIR /app
 COPY package*.json ./
 COPY tsconfig.json ./
 
-# Install dependencies with audit
-RUN npm ci --ignore-scripts && \
+# Install ALL dependencies (including dev) for building, with audit
+RUN npm ci --include=dev --ignore-scripts && \
     npm audit --audit-level=moderate || true
 
 # Generate SBOM (Software Bill of Materials) for dependencies
@@ -47,7 +47,7 @@ RUN cyclonedx-npm --output-file sbom-application.json || true
 # ============================================================================
 # Production Stage - Hardened runtime environment
 # ============================================================================
-FROM node:18-alpine AS production
+FROM node:20-alpine AS production
 
 # Add comprehensive image metadata for MCP Toolkit
 LABEL org.opencontainers.image.title="Context7 MCP Server"
