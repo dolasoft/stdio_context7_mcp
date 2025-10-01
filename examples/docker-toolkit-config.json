@@ -1,0 +1,28 @@
+{
+  "mcpServers": {
+    "stdio-context7": {
+      "command": "docker",
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "--stop-timeout",
+        "10",
+        "--name",
+        "stdio-context7-mcp",
+        "--security-opt",
+        "no-new-privileges:true",
+        "--cap-drop",
+        "ALL",
+        "--read-only",
+        "--tmpfs",
+        "/tmp:noexec,nosuid,size=100m",
+        "-e",
+        "CONTEXT7_API_KEY=${CONTEXT7_API_KEY}",
+        "-e",
+        "LOG_LEVEL=info",
+        "stdio-context7-mcp:latest"
+      ]
+    }
+  }
+}

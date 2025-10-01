@@ -49,14 +49,22 @@ RUN cyclonedx-npm --output-file sbom-application.json || true
 # ============================================================================
 FROM node:18-alpine AS production
 
-# Add image metadata and labels for provenance
-LABEL org.opencontainers.image.title="STDIO Context7 MCP Server"
-LABEL org.opencontainers.image.description="MCP server providing up-to-date library documentation via STDIO transport"
+# Add comprehensive image metadata for MCP Toolkit
+LABEL org.opencontainers.image.title="Context7 MCP Server"
+LABEL org.opencontainers.image.description="MCP server providing up-to-date library documentation via STDIO transport for AI assistants"
 LABEL org.opencontainers.image.version="1.0.0"
 LABEL org.opencontainers.image.vendor="DolaSoft"
 LABEL org.opencontainers.image.licenses="MIT"
-LABEL org.opencontainers.image.source="https://github.com/dolasoft/stdio_context7_mcp"
-LABEL org.opencontainers.image.documentation="https://github.com/dolasoft/stdio_context7_mcp/blob/main/README.md"
+LABEL org.opencontainers.image.source="https://github.com/dolasoft/stdio_stdio-context7_mcp"
+LABEL org.opencontainers.image.documentation="https://github.com/dolasoft/stdio_stdio-context7_mcp/blob/main/README.md"
+LABEL org.opencontainers.image.url="https://github.com/dolasoft/stdio_stdio-context7_mcp"
+
+# MCP Toolkit specific labels
+LABEL com.docker.mcp.server.name="stdio-context7"
+LABEL com.docker.mcp.server.version="1.0.0"
+LABEL com.docker.mcp.server.description="Context7 library documentation server for Docker MCP Toolkit"
+LABEL com.docker.mcp.server.transport="stdio"
+LABEL com.docker.mcp.server.capabilities="tools,resources,prompts"
 
 # Security hardening: Install dumb-init for proper signal handling and update CA certificates
 RUN apk add --no-cache \
@@ -102,15 +110,13 @@ USER mcp
 # Set secure environment variables
 ENV NODE_ENV=production \
     NODE_OPTIONS="--max-old-space-size=512" \
-    NPM_CONFIG_LOGLEVEL=warn
+    NPM_CONFIG_LOGLEVEL=warn \
+    MCP_SERVER_NAME="stdio-context7" \
+    MCP_SERVER_VERSION="1.0.0"
 
 # Health check for STDIO transport - check if process is responsive
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
   CMD echo '{"jsonrpc":"2.0","id":1,"method":"ping","params":{}}' | timeout 5 node dist/server.js --transport stdio > /dev/null || exit 1
-
-# Expose stdio transport (no port needed for stdio)
-# If HTTP transport is added in the future, expose port 3000
-# EXPOSE 3000
 
 # Security: Use tini as init system for proper signal handling
 ENTRYPOINT ["/sbin/tini", "--"]
