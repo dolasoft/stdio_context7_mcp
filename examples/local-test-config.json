@@ -1,0 +1,21 @@
+{
+  "mcpServers": {
+    "stdio-context7-local": {
+      "command": "docker",
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "--stop-timeout",
+        "10",
+        "-e",
+        "CONTEXT7_API_KEY=${CONTEXT7_API_KEY}",
+        "-e",
+        "LOG_LEVEL=debug",
+        "-e",
+        "NODE_ENV=development",
+        "stdio-context7-mcp:latest"
+      ]
+    }
+  }
+}

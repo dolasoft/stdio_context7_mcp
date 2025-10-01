@@ -116,4 +116,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
 ENTRYPOINT ["/sbin/tini", "--"]
 
 # Default command - run with stdio transport
-CMD ["node", "dist/src/server.js", "--transport", "stdio"]
+CMD ["node", "dist/server.js", "--transport", "stdio"]
