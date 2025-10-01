@@ -246,10 +246,6 @@ The Docker image is built with enterprise-grade security:
 - Always use `resolve-library-id` first to find the correct library ID
 - Ensure library ID format is correct (e.g., `/org/repo`)
 
-## Contributing
-
-Contributions welcome! Fork, create a feature branch, and submit a PR.
-
 ## License
 
 MIT License - see LICENSE file for details
