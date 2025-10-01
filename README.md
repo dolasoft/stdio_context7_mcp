@@ -30,7 +30,7 @@ This is an **alternative MCP server** to the original Context7, specifically cre
 - 🎯 **Topic Filtering**: Focus on specific topics within libraries
 - ⚡ **STDIO Transport**: Fast, local integration with MCP clients
 - 🐳 **Production Docker**: Multi-arch with SBOMs, provenance, and security hardening
-- 🔐 **Enterprise Security**: Non-root user, minimal attack surface, signed images
+- 🔐 **Enterprise Security**: Non-root user, minimal attack surface, Alpine Linux base
 - 🌍 **Multi-Architecture**: Supports amd64, arm64, and arm/v7 platforms
 - 🔄 **Universal Compatibility**: Works with Cursor, Windsurf, and other MCP clients
 
@@ -62,8 +62,6 @@ docker pull dolasoft/stdio-context7-mcp:latest
 - `--api-key <key>`: Context7 API key for authentication (optional, get one at [context7.com/dashboard](https://context7.com/dashboard) for higher rate limits)
 
 ## MCP Client Configuration
-
-> **📁 Configuration Examples**: See the [`examples/`](./examples/) directory for ready-to-use configuration files for different MCP clients.
 
 ### 🐳 Docker MCP Toolkit (Recommended)
 
