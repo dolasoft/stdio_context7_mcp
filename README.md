@@ -108,6 +108,29 @@ This server is **optimized for Claude Code via Docker MCP Toolkit**. Add to your
 }
 ```
 
+**With API Key (for higher rate limits):**
+```json
+{
+  "mcpServers": {
+    "stdio-context7": {
+      "command": "docker",
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "--stop-timeout",
+        "10",
+        "dolasoft/stdio-context7-mcp:latest",
+        "--api-key",
+        "YOUR_CONTEXT7_API_KEY"
+      ]
+    }
+  }
+}
+```
+
+Get your free API key at [context7.com/dashboard](https://context7.com/dashboard)
+
 **Pro tip**: Add this to your `CLAUDE.md` for automatic Context7 usage:
 ```markdown
 ## Context7 Integration
@@ -132,6 +155,27 @@ For Claude Desktop, Cursor, Windsurf, or any MCP-compatible client:
         "--stop-timeout",
         "10",
         "dolasoft/stdio-context7-mcp:latest"
+      ]
+    }
+  }
+}
+```
+
+**With API Key:**
+```json
+{
+  "mcpServers": {
+    "stdio-context7": {
+      "command": "docker",
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "--stop-timeout",
+        "10",
+        "dolasoft/stdio-context7-mcp:latest",
+        "--api-key",
+        "YOUR_CONTEXT7_API_KEY"
       ]
     }
   }
