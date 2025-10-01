@@ -1,5 +1,13 @@
 # STDIO Context7 MCP Server
 
+[![npm version](https://img.shields.io/npm/v/@dolasoft/stdio-context7-mcp-server?style=flat-square&logo=npm)](https://www.npmjs.com/package/@dolasoft/stdio-context7-mcp-server)
+[![Docker Image](https://img.shields.io/docker/v/dolasoft/stdio-context7-mcp?style=flat-square&logo=docker&label=docker)](https://hub.docker.com/r/dolasoft/stdio-context7-mcp)
+[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/dolasoft/stdio_context7_mcp/docker-toolkit.yml?style=flat-square&logo=github&label=build)](https://github.com/dolasoft/stdio_context7_mcp/actions)
+[![License](https://img.shields.io/github/license/dolasoft/stdio_context7_mcp?style=flat-square)](./LICENSE)
+[![MCP Protocol](https://img.shields.io/badge/MCP-2024--11--05-blue?style=flat-square&logo=data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJMMiA3TDEyIDEyTDIyIDdMMTIgMloiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik0yIDEyTDEyIDE3TDIyIDEyIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiLz4KPHBhdGggZD0iTTIgMTdMMTIgMjJMMjIgMTciIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMiIvPgo8L3N2Zz4=)](https://modelcontextprotocol.io/)
+[![Docker MCP Toolkit](https://img.shields.io/badge/Docker_MCP-Toolkit-2496ED?style=flat-square&logo=docker)](https://www.docker.com/products/docker-desktop/)
+[![Claude Code](https://img.shields.io/badge/Claude-Code-orange?style=flat-square&logo=anthropic)](https://claude.ai/code)
+
 > Alternative Context7 MCP implementation built to work with Claude Code via Docker MCP Toolkit
 
 An alternative implementation of the Context7 MCP server, designed to work seamlessly with **Claude Code via Docker MCP Toolkit**. This version provides up-to-date library documentation and code examples through STDIO transport, addressing connectivity issues with the original Context7 server in Docker MCP environments.
@@ -30,62 +38,28 @@ This is an **alternative MCP server** to the original Context7, specifically cre
 
 ### Prerequisites
 
-- Node.js >= 18.0.0
-- npm or yarn
+- Node.js >= 20.8.1
+- npm >= 10.0.0
 - Docker (optional, for containerized deployment)
 
-### Local Installation
+### npm Installation
 
 ```bash
-# Clone the repository
-git clone https://github.com/dolasoft/stdio_context7_mcp.git
-cd STDIO_Context7_MCP
-
-# Install dependencies
-npm install
-
-# Build the project
-npm run build
+npm install -g @dolasoft/stdio-context7-mcp-server
 ```
 
 ### Docker Installation
 
 ```bash
-# Build the Docker image
-docker build -t stdio-context7-mcp .
+# Pull the official image
+docker pull dolasoft/stdio-context7-mcp:latest
 ```
 
 ## Usage
 
-### Running Locally
-
-```bash
-# Start the server
-npm start
-
-# Start with API key
-node dist/src/server.js --api-key YOUR_API_KEY
-
-# Development mode (auto-rebuild)
-npm run dev
-```
-
-### Running with Docker
-
-```bash
-# Run the container (stdio mode)
-docker run -i dolasoft/stdio-context7-mcp:latest
-
-# Run with API key
-docker run -i dolasoft/stdio-context7-mcp:latest --api-key YOUR_API_KEY
-```
-
 ### CLI Arguments
 
-- `--transport <stdio|http|sse>`: Transport protocol to use (default: stdio)
 - `--api-key <key>`: Context7 API key for authentication (optional, get one at [context7.com/dashboard](https://context7.com/dashboard) for higher rate limits)
-
-**Note**: Currently only `stdio` transport is implemented. `http` and `sse` transports are planned for future releases.
 
 ## MCP Client Configuration
 
@@ -116,25 +90,8 @@ This server is **built for Docker MCP Toolkit** and integrates seamlessly with *
 
 ### 🤖 Claude Code
 
-This server is **optimized for Claude Code**. Add to your MCP configuration:
+This server is **optimized for Claude Code via Docker MCP Toolkit**. Add to your MCP configuration:
 
-**Using Node.js:**
-```json
-{
-  "mcpServers": {
-    "stdio-context7": {
-      "command": "node",
-      "args": [
-        "/path/to/STDIO_Context7_MCP/dist/src/server.js",
-        "--transport",
-        "stdio"
-      ]
-    }
-  }
-}
-```
-
-**Using Docker (Recommended for Claude Code):**
 ```json
 {
   "mcpServers": {
@@ -153,70 +110,17 @@ This server is **optimized for Claude Code**. Add to your MCP configuration:
 }
 ```
 
-**Add this to your `.clauderc` or `CLAUDE.md` for automatic usage:**
+**Pro tip**: Add this to your `CLAUDE.md` for automatic Context7 usage:
 ```markdown
 ## Context7 Integration
 
-Always use the stdio-context7 MCP server when you need:
-- Library documentation and API references
-- Code examples for frameworks and libraries
-- Up-to-date installation and configuration instructions
-- Best practices for popular development tools
-
-Use the `resolve-library-id` tool first to find the correct library ID,
-then use `get-library-docs` to fetch the documentation.
+Use the stdio-context7 MCP server for library documentation and code examples.
+Always use `resolve-library-id` first, then `get-library-docs`.
 ```
 
-### Claude Desktop
+### Other MCP Clients
 
-Add to your `claude_desktop_config.json`:
-
-```json
-{
-  "mcpServers": {
-    "stdio-context7": {
-      "command": "node",
-      "args": [
-        "/path/to/STDIO_Context7_MCP/dist/src/server.js",
-        "--api-key",
-        "YOUR_API_KEY"
-      ]
-    }
-  }
-}
-```
-
-### Cursor
-
-Go to Settings → Cursor Settings → MCP → Add new global MCP server:
-
-```json
-{
-  "mcpServers": {
-    "stdio-context7": {
-      "command": "node",
-      "args": ["/path/to/STDIO_Context7_MCP/dist/src/server.js"]
-    }
-  }
-}
-```
-
-### VS Code with Copilot
-
-Add to your VS Code MCP settings:
-
-```json
-{
-  "mcpServers": {
-    "stdio-context7": {
-      "command": "node",
-      "args": ["/path/to/STDIO_Context7_MCP/dist/src/server.js"]
-    }
-  }
-}
-```
-
-### Docker in MCP Clients
+For Claude Desktop, Cursor, Windsurf, or any MCP-compatible client:
 
 ```json
 {
@@ -308,26 +212,6 @@ Or reference a specific library ID:
 Implement authentication with Supabase. use library /supabase/supabase
 ```
 
-### Adding a Rule (Recommended)
-
-Add a rule to your MCP client to automatically use Context7:
-
-**For Cursor** (in Cursor Settings → Rules):
-```
-Always use context7 when I need code generation, setup or configuration steps,
-or library/API documentation. This means you should automatically use the
-Context7 MCP tools without me having to explicitly ask.
-```
-
-**For Claude Code** (in CLAUDE.md):
-```markdown
-Use context7 MCP tools for all library documentation and code examples.
-```
-
-**For Windsurf** (in .windsurfrules):
-```
-Use context7 for fetching library documentation and examples.
-```
 
 ## Supported Libraries
 
@@ -342,205 +226,31 @@ This server uses the **real Context7 API** and supports **all libraries** availa
 
 The server fetches up-to-date documentation directly from Context7's live API.
 
-## Development
 
-### Project Structure
+## Security
 
-```
-STDIO_Context7_MCP/
-├── src/                   # Source code
-│   ├── config/           # Configuration management
-│   ├── constants/        # Application constants
-│   ├── handlers/         # MCP request handlers
-│   ├── server/           # Server initialization
-│   ├── services/         # Business logic services
-│   ├── types/            # TypeScript type definitions
-│   ├── utils/            # Utility functions
-│   └── server.ts         # Main entry point
-├── examples/              # MCP client configuration examples
-│   ├── with-api-key.json
-│   ├── without-api-key.json
-│   └── README.md
-├── tests/                 # Test suite
-│   ├── unit/             # Unit tests
-│   ├── integration/      # Integration tests
-│   └── setup.ts          # Test setup
-├── dist/                  # Compiled output
-│   └── src/              # Compiled TypeScript
-├── coverage/              # Test coverage reports
-├── package.json           # Project configuration
-├── tsconfig.json          # TypeScript config
-├── tsconfig.test.json     # Test TypeScript config
-├── vitest.config.ts       # Vitest configuration
-├── eslint.config.js       # ESLint configuration
-├── Dockerfile             # Docker image definition
-├── build-docker.sh        # Docker build script
-├── run-mcp.sh            # MCP runner script
-└── README.md             # This file
-```
+The Docker image is built with enterprise-grade security:
 
-### Building
-
-```bash
-# Compile TypeScript
-npm run build
-
-# Watch mode
-npm run dev
-```
-
-### Testing
-
-```bash
-# Build and run
-npm run dev
-
-# Test with MCP inspector (if available)
-npx @modelcontextprotocol/inspector node dist/index.js
-```
-
-## Docker Deployment
-
-### Security Features
-
-This MCP server Docker image is built with enterprise-grade security features:
-
-- **SBOMs (Software Bill of Materials)**: Automatically generates CycloneDX SBOMs for vulnerability scanning
-- **Provenance Attestations**: Build provenance metadata for supply chain security verification
-- **Image Signing Support**: Compatible with Cosign for cryptographic signing
-- **Multi-Architecture Support**: Builds for `linux/amd64`, `linux/arm64`, `linux/arm/v7`
-- **Security Hardening**: Non-root user (UID 1001), minimal Alpine Linux base, updated CA certificates
-
-### Quick Start
-
-#### Using the Build Script
-
-```bash
-# Build with default settings (multi-arch)
-./build-docker.sh
-
-# Build for single platform (faster for testing)
-PLATFORMS=linux/amd64 ./build-docker.sh
-
-# Build and push to registry
-REGISTRY=docker.io/yourusername IMAGE_NAME=stdio-context7-mcp ./build-docker.sh
-```
-
-#### Manual Build
-
-```bash
-# Single architecture (local testing)
-docker build -t stdio-context7-mcp:latest .
-docker run -i stdio-context7-mcp:latest
-
-# Multi-architecture build with security features
-docker buildx create --name mcp-builder --use
-docker buildx build \
-  --platform linux/amd64,linux/arm64,linux/arm/v7 \
-  --tag yourusername/stdio-context7-mcp:1.0.0 \
-  --provenance=true \
-  --sbom=true \
-  --push \
-  .
-```
-
-### Security Best Practices
-
-```bash
-# Vulnerability scanning
-trivy image --severity HIGH,CRITICAL stdio-context7-mcp:latest
-
-# Run with security hardening
-docker run -i \
-  --read-only \
-  --security-opt=no-new-privileges:true \
-  --cap-drop=ALL \
-  --network=none \
-  stdio-context7-mcp:latest
-```
-
-### Image Signing (Optional)
-
-```bash
-# Install Cosign
-brew install cosign  # macOS
-# or download from GitHub releases
-
-# Generate keys
-cosign generate-key-pair
-
-# Sign image
-cosign sign --key cosign.key yourusername/stdio-context7-mcp:1.0.0
-
-# Verify signature
-cosign verify --key cosign.pub yourusername/stdio-context7-mcp:1.0.0
-```
+- **Non-root user** (UID 1001)
+- **Multi-architecture**: amd64, arm64, arm/v7
+- **SBOMs & Provenance**: Full supply chain transparency
+- **Alpine Linux**: Minimal attack surface
+- **Regular updates**: Automated security patches
 
 ## Troubleshooting
 
-### Server Not Responding
+**Server not responding?**
+- Verify Docker is running: `docker ps`
+- Check MCP client logs for connection errors
+- Ensure correct image: `docker pull dolasoft/stdio-context7-mcp:latest`
 
-1. Check that the server is running: `ps aux | grep node`
-2. Verify the path in your MCP client configuration
-3. Check logs in your MCP client
-4. Ensure Node.js version is >= 18.0.0
-
-### Library Not Found
-
-1. Use `resolve-library-id` first to find the correct library ID
-2. Check the list of supported libraries in this README
-3. Ensure the library ID format is correct (e.g., `/org/repo`)
-
-### Docker Issues
-
-1. Ensure Docker is running: `docker ps`
-2. Check container logs: `docker logs <container-id>`
-3. Verify the image was built: `docker images | grep stdio-context7`
-
-## Docker MCP Toolkit Submission
-
-This server is designed for inclusion in the **Docker MCP Toolkit** ecosystem. It meets the following requirements:
-
-✅ **Published to npm**: Available as `@dolasoft/stdio-context7-mcp-server`
-✅ **Docker Image**: Multi-arch images on Docker Hub at `dolasoft/stdio-context7-mcp`
-✅ **STDIO Transport**: Full compliance with MCP protocol via STDIO
-✅ **Comprehensive Documentation**: Complete README with examples and troubleshooting
-✅ **Security Hardened**: SBOMs, provenance attestations, non-root user
-✅ **Production Ready**: Tested with Claude Code and Docker Desktop
-✅ **Open Source**: MIT licensed with public repository
-
-### Submission Checklist
-
-- [x] Server implements MCP protocol correctly
-- [x] Docker image published to registry
-- [x] npm package published
-- [x] Comprehensive documentation
-- [x] Example configurations provided
-- [x] Security best practices followed
-- [x] Multi-architecture support (amd64, arm64, arm/v7)
-- [x] Tested with Claude Code via Docker MCP Toolkit
+**Library not found?**
+- Always use `resolve-library-id` first to find the correct library ID
+- Ensure library ID format is correct (e.g., `/org/repo`)
 
 ## Contributing
 
-Contributions are welcome! Please follow these steps:
-
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/your-feature`
-3. Make your changes
-4. Run tests and build: `npm run build`
-5. Commit your changes: `git commit -am 'Add new feature'`
-6. Push to the branch: `git push origin feature/your-feature`
-7. Submit a pull request
-
-## Roadmap
-
-- [x] Real Context7 API integration ✅
-- [x] Caching mechanism for better performance ✅
-- [ ] HTTP/SSE transport support
-- [ ] Version-specific documentation
-- [ ] Search functionality across libraries
-- [ ] Rate limiting and quota management
-- [ ] Offline fallback mode
+Contributions welcome! Fork, create a feature branch, and submit a PR.
 
 ## License
 
@@ -548,16 +258,9 @@ MIT License - see LICENSE file for details
 
 ## Acknowledgments
 
-- Inspired by [Context7](https://github.com/upstash/context7) by Upstash
+- Powered by [Context7 API](https://context7.com) by Upstash
 - Built with [Model Context Protocol](https://modelcontextprotocol.io/)
-- Powered by the [MCP TypeScript SDK](https://github.com/modelcontextprotocol/typescript-sdk)
-
-## Support
-
-- 📖 Documentation: This README contains all necessary information
-- 🐛 Issues: Report bugs in the issue tracker
-- 💬 Discussions: Join the community discussions
 
 ---
 
-Made with ❤️ for the MCP community
+Built for the MCP community and Docker MCP Toolkit
