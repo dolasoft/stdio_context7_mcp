@@ -3,11 +3,10 @@
   "license": "MIT",
   "name": "stdio_context7_mcp",
   "version": "1.0.0",
-  "type": "module",
   "description": "STDIO Context7 MCP Server - Up-to-date code documentation for LLMs and AI code editors",
-  "main": "dist/src/server.js",
+  "main": "dist/server.js",
   "bin": {
-    "stdio-context7-mcp": "./dist/src/server.js"
+    "stdio-context7-mcp": "./dist/server.js"
   },
   "keywords": [
     "mcp",
@@ -56,8 +55,8 @@
     "README.md"
   ],
   "scripts": {
-    "build": "tsc && mkdir -p dist && chmod +x dist/src/server.js",
-    "start": "node dist/src/server.js",
+    "build": "tsc && chmod +x dist/server.js",
+    "start": "node dist/server.js",
     "dev": "npm run build && npm start",
     "lint": "eslint src --ext .ts",
     "lint:fix": "npm run lint -- --fix",

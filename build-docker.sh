@@ -5,7 +5,7 @@ set -e
 
 # Configuration
 IMAGE_NAME="${IMAGE_NAME:-stdio-context7-mcp}"
-REGISTRY="${REGISTRY:-docker.io/yourusername}"
+REGISTRY="${REGISTRY:-}"
 VERSION="${VERSION:-1.0.0}"
 PLATFORMS="${PLATFORMS:-linux/amd64,linux/arm64,linux/arm/v7}"
 
@@ -39,13 +39,21 @@ docker buildx use ${BUILDER_NAME}
 # Build with multi-arch support, provenance, and SBOM
 echo -e "${GREEN}Building multi-architecture images...${NC}"
 echo -e "Platforms: ${PLATFORMS}"
-echo -e "Image: ${REGISTRY}/${IMAGE_NAME}:${VERSION}"
+
+# Handle registry prefix
+if [ -n "${REGISTRY}" ]; then
+    FULL_IMAGE_NAME="${REGISTRY}/${IMAGE_NAME}"
+else
+    FULL_IMAGE_NAME="${IMAGE_NAME}"
+fi
+
+echo -e "Image: ${FULL_IMAGE_NAME}:${VERSION}"
 
 docker buildx build \
     --platform ${PLATFORMS} \
     --build-arg VERSION=${VERSION} \
-    --tag ${REGISTRY}/${IMAGE_NAME}:${VERSION} \
-    --tag ${REGISTRY}/${IMAGE_NAME}:latest \
+    --tag ${FULL_IMAGE_NAME}:${VERSION} \
+    --tag ${FULL_IMAGE_NAME}:latest \
     --provenance=true \
     --sbom=true \
     --output type=image,push=false \
@@ -56,17 +64,17 @@ echo -e "${GREEN}========================================${NC}"
 echo -e "${GREEN}Build completed successfully!${NC}"
 echo -e "${GREEN}========================================${NC}"
 echo ""
-echo -e "Image built: ${REGISTRY}/${IMAGE_NAME}:${VERSION}"
+echo -e "Image built: ${FULL_IMAGE_NAME}:${VERSION}"
 echo ""
 echo -e "${YELLOW}Next steps:${NC}"
 echo "1. Test the image locally:"
-echo -e "   ${GREEN}docker run -i ${REGISTRY}/${IMAGE_NAME}:${VERSION}${NC}"
+echo -e "   ${GREEN}docker run -i ${FULL_IMAGE_NAME}:${VERSION}${NC}"
 echo ""
 echo "2. Push to registry (requires authentication):"
-echo -e "   ${GREEN}docker buildx build --platform ${PLATFORMS} --push --tag ${REGISTRY}/${IMAGE_NAME}:${VERSION} .${NC}"
+echo -e "   ${GREEN}docker buildx build --platform ${PLATFORMS} --push --tag ${FULL_IMAGE_NAME}:${VERSION} .${NC}"
 echo ""
 echo "3. Sign the image (optional, requires cosign):"
-echo -e "   ${GREEN}cosign sign ${REGISTRY}/${IMAGE_NAME}:${VERSION}${NC}"
+echo -e "   ${GREEN}cosign sign ${FULL_IMAGE_NAME}:${VERSION}${NC}"
 echo ""
 echo -e "${YELLOW}To build for a single platform (faster for testing):${NC}"
 echo -e "   ${GREEN}PLATFORMS=linux/amd64 ./build-docker.sh${NC}"
