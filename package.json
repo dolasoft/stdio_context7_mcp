@@ -1,6 +1,6 @@
 {
   "name": "@dolasoft/stdio-context7-mcp-server",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Context7 MCP Server for Docker MCP Toolkit - Up-to-date library documentation for Claude Code and AI assistants via Model Context Protocol",
   "main": "dist/server.js",
   "bin": {
@@ -52,7 +52,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/dolasoft/stdio_stdio-context7_mcp.git",
+    "url": "https://github.com/dolasoft/stdio_context7_mcp.git",
     "directory": "."
   },
   "bugs": {
