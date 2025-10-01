@@ -1,27 +1,30 @@
 # STDIO Context7 MCP Server
 
-> Alternative Context7 MCP server built specifically for seamless integration with Cursor and other MCP-compatible AI assistants
+> Alternative Context7 MCP implementation built to work with Claude Code via Docker MCP Toolkit
 
-An alternative implementation of the Context7 MCP server, designed from the ground up to work seamlessly with **Cursor** and other MCP-compatible AI assistants. This server provides up-to-date library documentation and code examples directly through STDIO transport.
+An alternative implementation of the Context7 MCP server, designed to work seamlessly with **Claude Code via Docker MCP Toolkit**. This version provides up-to-date library documentation and code examples through STDIO transport, addressing connectivity issues with the original Context7 server in Docker MCP environments.
 
 ## 🎯 Purpose
 
-This is an **alternative MCP server** to the original Context7, built with the specific purpose of:
-- **Seamless Cursor Integration**: Optimized for the Cursor IDE experience
+This is an **alternative MCP server** to the original Context7, specifically created to solve connectivity issues with Docker MCP Toolkit. Built with the specific goals of:
+- **Docker MCP Toolkit Compatible**: Works reliably with Claude Code via Docker Desktop's MCP infrastructure (where the original doesn't)
+- **Claude Code Optimized**: First-class support for Claude Code IDE workflows
 - **Enhanced STDIO Transport**: Direct, efficient communication via standard input/output
-- **Developer-First Design**: Built by developers, for developers using Cursor
 - **Production-Ready Security**: Enterprise-grade Docker image with SBOMs, provenance, and signing support
+- **Universal Compatibility**: Works with all MCP-compatible AI assistants (Claude, Cursor, Windsurf, etc.)
 
 ## ✨ Features
 
-- 🤖 **Cursor Optimized**: Purpose-built for seamless Cursor integration
+- 🐳 **Docker MCP Toolkit Native**: Built for Docker Desktop MCP integration
+- 🤖 **Claude Code First**: Optimized for Claude Code IDE workflows
 - 🔍 **Library Resolution**: Resolve library names to Context7-compatible IDs
 - 📚 **Documentation Retrieval**: Fetch up-to-date documentation and code examples
 - 🎯 **Topic Filtering**: Focus on specific topics within libraries
-- ⚡ **STDIO Transport**: Fast, local integration with MCP clients (HTTP/SSE planned)
+- ⚡ **STDIO Transport**: Fast, local integration with MCP clients
 - 🐳 **Production Docker**: Multi-arch with SBOMs, provenance, and security hardening
 - 🔐 **Enterprise Security**: Non-root user, minimal attack surface, signed images
 - 🌍 **Multi-Architecture**: Supports amd64, arm64, and arm/v7 platforms
+- 🔄 **Universal Compatibility**: Works with Cursor, Windsurf, and other MCP clients
 
 ## Installation
 
@@ -88,27 +91,11 @@ docker run -i dolasoft/stdio-context7-mcp:latest --api-key YOUR_API_KEY
 
 > **📁 Configuration Examples**: See the [`examples/`](./examples/) directory for ready-to-use configuration files for different MCP clients.
 
-### 🎯 Cursor (Recommended)
+### 🐳 Docker MCP Toolkit (Recommended)
 
-This server is **optimized for Cursor**. Add to your MCP configuration:
+This server is **built for Docker MCP Toolkit** and integrates seamlessly with **Claude Code**. Using Docker provides the most reliable and secure deployment option.
 
-**Using Node.js:**
-```json
-{
-  "mcpServers": {
-    "stdio-context7": {
-      "command": "node",
-      "args": [
-        "/path/to/STDIO_Context7_MCP/dist/src/server.js",
-        "--transport",
-        "stdio"
-      ]
-    }
-  }
-}
-```
-
-**Using Docker (Production-Ready):**
+**For Docker Desktop MCP:**
 ```json
 {
   "mcpServers": {
@@ -127,7 +114,46 @@ This server is **optimized for Cursor**. Add to your MCP configuration:
 }
 ```
 
-**Add this rule to your `CLAUDE.md` for automatic usage:**
+### 🤖 Claude Code
+
+This server is **optimized for Claude Code**. Add to your MCP configuration:
+
+**Using Node.js:**
+```json
+{
+  "mcpServers": {
+    "stdio-context7": {
+      "command": "node",
+      "args": [
+        "/path/to/STDIO_Context7_MCP/dist/src/server.js",
+        "--transport",
+        "stdio"
+      ]
+    }
+  }
+}
+```
+
+**Using Docker (Recommended for Claude Code):**
+```json
+{
+  "mcpServers": {
+    "stdio-context7": {
+      "command": "docker",
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "--stop-timeout",
+        "10",
+        "dolasoft/stdio-context7-mcp:latest"
+      ]
+    }
+  }
+}
+```
+
+**Add this to your `.clauderc` or `CLAUDE.md` for automatic usage:**
 ```markdown
 ## Context7 Integration
 
@@ -470,6 +496,29 @@ cosign verify --key cosign.pub yourusername/stdio-context7-mcp:1.0.0
 1. Ensure Docker is running: `docker ps`
 2. Check container logs: `docker logs <container-id>`
 3. Verify the image was built: `docker images | grep stdio-context7`
+
+## Docker MCP Toolkit Submission
+
+This server is designed for inclusion in the **Docker MCP Toolkit** ecosystem. It meets the following requirements:
+
+✅ **Published to npm**: Available as `@dolasoft/stdio-context7-mcp-server`
+✅ **Docker Image**: Multi-arch images on Docker Hub at `dolasoft/stdio-context7-mcp`
+✅ **STDIO Transport**: Full compliance with MCP protocol via STDIO
+✅ **Comprehensive Documentation**: Complete README with examples and troubleshooting
+✅ **Security Hardened**: SBOMs, provenance attestations, non-root user
+✅ **Production Ready**: Tested with Claude Code and Docker Desktop
+✅ **Open Source**: MIT licensed with public repository
+
+### Submission Checklist
+
+- [x] Server implements MCP protocol correctly
+- [x] Docker image published to registry
+- [x] npm package published
+- [x] Comprehensive documentation
+- [x] Example configurations provided
+- [x] Security best practices followed
+- [x] Multi-architecture support (amd64, arm64, arm/v7)
+- [x] Tested with Claude Code via Docker MCP Toolkit
 
 ## Contributing
 

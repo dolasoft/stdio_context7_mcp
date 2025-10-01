@@ -1,7 +1,7 @@
 {
   "name": "@dolasoft/stdio-context7-mcp-server",
   "version": "1.0.0",
-  "description": "Context7 STDIOMCP Server - Up-to-date library documentation for AI assistants via Model Context Protocol",
+  "description": "Context7 MCP Server for Docker MCP Toolkit - Up-to-date library documentation for Claude Code and AI assistants via Model Context Protocol",
   "main": "dist/server.js",
   "bin": {
     "stdio-context7-mcp": "./dist/server.js"
@@ -9,14 +9,18 @@
   "keywords": [
     "mcp",
     "model-context-protocol",
+    "docker-mcp-toolkit",
+    "claude-code",
     "llm",
     "ai",
     "documentation",
-    "stdio-context7",
+    "context7",
     "docker",
-    "toolkit",
+    "stdio",
     "cursor",
-    "claude"
+    "claude",
+    "windsurf",
+    "library-docs"
   ],
   "author": {
     "name": "DolaSoft",
@@ -59,6 +63,7 @@
     "dist/",
     "examples/",
     "README.md",
+    "SUBMISSION.md",
     "LICENSE"
   ],
   "engines": {
