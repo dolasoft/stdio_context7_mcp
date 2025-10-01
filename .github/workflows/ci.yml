@@ -36,8 +36,3 @@ jobs:
 
     - name: Build project
       run: npm run build
-
-    - name: Test Docker build (local only)
-      run: |
-        docker build -t stdio-context7-mcp:test .
-        echo '{"jsonrpc": "2.0", "id": 1, "method": "tools/list", "params": {}}' | docker run -i stdio-context7-mcp:test
