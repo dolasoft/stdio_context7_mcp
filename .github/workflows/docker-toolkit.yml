@@ -8,8 +8,10 @@ on:
     branches: [ main ]
 
 env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+  GHCR_REGISTRY: ghcr.io
+  DOCKERHUB_REGISTRY: docker.io
+  GHCR_IMAGE: ${{ github.repository }}
+  DOCKERHUB_IMAGE: dolasoft/stdio-context7-mcp
 
 jobs:
   build-and-test:
@@ -26,18 +28,27 @@ jobs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
 
-    - name: Log in to Container Registry
+    - name: Log in to GitHub Container Registry
       uses: docker/login-action@v3
       with:
-        registry: ${{ env.REGISTRY }}
+        registry: ${{ env.GHCR_REGISTRY }}
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        registry: ${{ env.DOCKERHUB_REGISTRY }}
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
 
     - name: Extract metadata
       id: meta
       uses: docker/metadata-action@v5
       with:
-        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+        images: |
+          ${{ env.GHCR_REGISTRY }}/${{ env.GHCR_IMAGE }}
+          ${{ env.DOCKERHUB_REGISTRY }}/${{ env.DOCKERHUB_IMAGE }}
         tags: |
           type=ref,event=branch
           type=ref,event=pr
@@ -83,22 +94,22 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Log in to Container Registry
+    - name: Log in to GitHub Container Registry
       uses: docker/login-action@v3
       with:
-        registry: ${{ env.REGISTRY }}
+        registry: ${{ env.GHCR_REGISTRY }}
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Test MCP Protocol
       run: |
         # Test the MCP protocol with the built image
-        timeout 30s bash -c "echo '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"initialize\",\"params\":{\"protocolVersion\":\"2024-11-05\",\"capabilities\":{\"roots\":{\"listChanged\":true},\"sampling\":{}},\"clientInfo\":{\"name\":\"test-client\",\"version\":\"1.0.0\"}}}' | docker run -i --rm ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest" || true
+        timeout 30s bash -c "echo '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"initialize\",\"params\":{\"protocolVersion\":\"2024-11-05\",\"capabilities\":{\"roots\":{\"listChanged\":true},\"sampling\":{}},\"clientInfo\":{\"name\":\"test-client\",\"version\":\"1.0.0\"}}}' | docker run -i --rm ${{ env.GHCR_REGISTRY }}/${{ env.GHCR_IMAGE }}:latest" || true
         echo "MCP protocol test completed"
 
     - name: Test Tools List
       run: |
-        timeout 30s bash -c "echo '{\"jsonrpc\":\"2.0\",\"id\":2,\"method\":\"tools/list\",\"params\":{}}' | docker run -i --rm ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest" || true
+        timeout 30s bash -c "echo '{\"jsonrpc\":\"2.0\",\"id\":2,\"method\":\"tools/list\",\"params\":{}}' | docker run -i --rm ${{ env.GHCR_REGISTRY }}/${{ env.GHCR_IMAGE }}:latest" || true
         echo "Tools list test completed"
 
   security-scan:
