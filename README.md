@@ -31,7 +31,7 @@ This is an **alternative MCP server** to the original Context7, specifically cre
 - ⚡ **STDIO Transport**: Fast, local integration with MCP clients
 - 🐳 **Production Docker**: Multi-arch with SBOMs, provenance, and security hardening
 - 🔐 **Enterprise Security**: Non-root user, minimal attack surface, Alpine Linux base
-- 🌍 **Multi-Architecture**: Supports amd64, arm64, and arm/v7 platforms
+- 🌍 **Multi-Architecture**: Supports amd64 and arm64 platforms (Intel, AMD, Apple Silicon)
 - 🔄 **Universal Compatibility**: Works with Cursor, Windsurf, and other MCP clients
 
 ## Installation
@@ -274,7 +274,7 @@ The server fetches up-to-date documentation directly from Context7's live API.
 The Docker image is built with enterprise-grade security:
 
 - **Non-root user** (UID 1001)
-- **Multi-architecture**: amd64, arm64, arm/v7
+- **Multi-architecture**: amd64, arm64
 - **SBOMs & Provenance**: Full supply chain transparency
 - **Alpine Linux**: Minimal attack surface
 - **Regular updates**: Automated security patches
